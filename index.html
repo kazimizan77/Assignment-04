@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            font-family: "Geist", sans-serif;
+
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+    <main class="max-w-5xl mx-auto px-4 py-10">
+        <header>
+            <h1 class="text-3xl md:text-4xl font-semibold">Job Application Tracker</h1>
+            <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                    <p class="text-xs text-slate-500">Total</p>
+                    <p class="mt-2 text-2xl font-semibold text-slate-900">8</p>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                    <p class="text-xs text-slate-500">Interview</p>
+                    <p class="mt-2 text-2xl font-semibold text-emerald-600">0</p>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                    <p class="text-xs text-slate-500">Rejected</p>
+                    <p class="mt-2 text-2xl font-semibold text-rose-500">0</p>
+                </div>
+            </div>
+        </header>
+
+        <hr class="my-8 border-slate-200" />
+
+        <section>
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold">Available Jobs</h2>
+                <p class="text-sm text-slate-500">8 jobs</p>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+
+                <button class="px-4 py-2 text-sm rounded-md border border-slate-200 bg-blue-600 text-white">
+                    All
+                </button>
+
+                <button
+                    class="px-4 py-2 text-sm rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-100">
+                    Interview
+                </button>
+
+                <button
+                    class="px-4 py-2 text-sm rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-100">
+                    Rejected
+                </button>
+
+            </div>
+        </section>
+
+        
+
+
+    </main>
+</body>
+
+</html>
