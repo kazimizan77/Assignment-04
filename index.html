@@ -18,6 +18,10 @@
             font-family: "Geist", sans-serif;
 
         }
+
+        #delete-modal:target {
+            display: block;
+        }
     </style>
 </head>
 
@@ -28,17 +32,17 @@
             <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
                     <p class="text-xs text-gray-800">Total</p>
-                    <p class="mt-3 text-2xl font-semibold">8</p>
+                    <p id="total" class="mt-3 text-2xl font-semibold">8</p>
                 </div>
 
                 <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
                     <p class="text-xs text-gray-800">Interview</p>
-                    <p class="mt-3 text-2xl font-semibold text-green-500">0</p>
+                    <p id="interview-count" class="mt-3 text-2xl font-semibold text-green-500">0</p>
                 </div>
 
                 <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
                     <p class="text-xs text-gray-800">Rejected</p>
-                    <p class="mt-3 text-2xl font-semibold text-rose-500">0</p>
+                    <p id="rejected-count" class="mt-3 text-2xl font-semibold text-rose-500">0</p>
                 </div>
             </div>
         </header>
@@ -48,20 +52,21 @@
         <section>
             <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold">Available Jobs</h2>
-                <p class="text-sm text-gray-500">8 jobs</p>
+                <p class="text-sm text-gray-500"><span id="active-jobs-count">8</span> jobs</p>
             </div>
             <div class="mt-4 flex flex-wrap gap-2">
 
-                <button class="px-8 py-2 text-sm rounded-md border border-slate-200 bg-blue-600 text-white">
+                <button id="all-filter-btn" onclick="toggleStyle('all-filter-btn')"
+                    class="px-8 py-2 text-sm rounded-md border border-slate-200 bg-blue-600 text-white">
                     All
                 </button>
 
-                <button
+                <button id="interview-filter-btn" onclick="toggleStyle('interview-filter-btn')"
                     class="px-8 py-2 text-sm rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-100">
                     Interview
                 </button>
 
-                <button
+                <button id="rejected-filter-btn" onclick="toggleStyle('rejected-filter-btn')"
                     class="px-8 py-2 text-sm rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-100">
                     Rejected
                 </button>
@@ -69,27 +74,32 @@
             </div>
         </section>
 
-        <section class="mt-5 space-y-4">
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+        <section id="filtered-section" class="hidden mt-5 space-y-4"></section>
+
+        <section id="allCards" class="mt-5 space-y-4">
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
 
                 <div class="flex items-start justify-between">
 
                     <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">Mobile First Corp</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">React Native Developer</p>
+                        <h3 class="companyName text-[18px] font-semibold">Mobile First Corp</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">React Native Developer</p>
 
                         <p class="text-sm text-slate-500 mt-4">
-                            Remote • Full-time • $130,000 - $175,000
+                            <span class="location">Remote</span> •
+                            <span class="jobType">Full-time</span> •
+                            <span class="salary">$130,000 - $175,000</span>
+
                         </p>
 
                         <div class="mt-5">
                             <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
                                 NOT APPLIED
                             </span>
                         </div>
 
-                        <p class="text-sm text-gray-700 mt-4">
+                        <p class="description text-sm text-gray-700 mt-4">
                             Build cross-platform mobile applications using React Native. Work on products used by
                             millions of users worldwide.
                         </p>
@@ -97,203 +107,208 @@
                         <div class="mt-5 flex gap-3">
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
                                 INTERVIEW
                             </button>
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
                                 REJECTED
                             </button>
 
                         </div>
                     </div>
 
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
                         aria-label="Delete">
-
                         <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
+                    </a>
 
                 </div>
-
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
 
                 <div class="flex items-start justify-between">
 
                     <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">WebFlow Agency</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">Web Designer & Developer</p>
+                        <h3 class="companyName text-[18px] font-semibold">DataViz Solutions</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">Data Visualization Specialist</p>
 
                         <p class="text-sm text-slate-500 mt-4">
-                            Los Angeles, CA • Part-time • $80,000 - $120,000
+                            <span class="location">Boston, MA</span> •
+                            <span class="jobType">Full-time</span> •
+                            <span class="salary">$125,000 - $165,000</span>
+
                         </p>
 
                         <div class="mt-5">
                             <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
                                 NOT APPLIED
                             </span>
                         </div>
 
-                        <p class="text-sm text-gray-700 mt-4">
-                            Create stunning web experiences for high-profile clients. Must have portfolio and experience
-                            with modern web design trends.
-                        </p>
-
-                        <div class="mt-5 flex gap-3">
-
-                            <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
-                                INTERVIEW
-                            </button>
-
-                            <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
-                                REJECTED
-                            </button>
-
-                        </div>
-                    </div>
-
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
-                        aria-label="Delete">
-
-                        <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
-
-                <div class="flex items-start justify-between">
-
-                    <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">DataViz Solutions</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">Data Visualization Specialist</p>
-
-                        <p class="text-sm text-slate-500 mt-4">
-                            Boston, MA • Full-time • $125,000 - $165,000
-                        </p>
-
-                        <div class="mt-5">
-                            <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
-                                NOT APPLIED
-                            </span>
-                        </div>
-
-                        <p class="text-sm text-gray-700 mt-4">
-                            Transform complex data into compelling visualizations. Required skills: D3.js, React, and
+                        <p class="description text-sm text-gray-700 mt-4">
+                            Transform complex data into compelling visualizations. Required skills: D3.js, React,
+                            and
                             strong analytical thinking.
                         </p>
 
                         <div class="mt-5 flex gap-3">
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
                                 INTERVIEW
                             </button>
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
                                 REJECTED
                             </button>
 
                         </div>
                     </div>
 
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
                         aria-label="Delete">
-
                         <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
+                    </a>
 
                 </div>
 
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
 
                 <div class="flex items-start justify-between">
 
                     <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">CloudFirst Inc</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">Backend Developer</p>
+                        <h3 class="companyName text-[18px] font-semibold">WebFlow Agency</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">Web Designer & Developer</p>
 
                         <p class="text-sm text-slate-500 mt-4">
-                            Seattle, WA • Full-time • $140,000 - $190,000
+                            <span class="location">Los Angeles, CA</span> •
+                            <span class="jobType">Part-time</span> •
+                            <span class="salary">$80,000 - $120,000</span>
+
                         </p>
 
                         <div class="mt-5">
                             <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
                                 NOT APPLIED
                             </span>
                         </div>
 
-                        <p class="text-sm text-gray-700 mt-4">
-                            Design and maintain scalable backend systems using Python and AWS. Work with modern DevOps
-                            practices and cloud infrastructure.
+                        <p class="description text-sm text-gray-700 mt-4">
+                            Create stunning web experiences for high-profile clients. Must have portfolio and
+                            experience
+                            with modern web design trends.
                         </p>
 
                         <div class="mt-5 flex gap-3">
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
                                 INTERVIEW
                             </button>
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
                                 REJECTED
                             </button>
 
                         </div>
                     </div>
 
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
                         aria-label="Delete">
-
                         <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
+                    </a>
 
                 </div>
 
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
 
                 <div class="flex items-start justify-between">
 
                     <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">Innovation Labs</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">UI/UX Engineer</p>
+                        <h3 class="companyName text-[18px] font-semibold">CloudFirst Inc</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">Backend Developer</p>
 
                         <p class="text-sm text-slate-500 mt-4">
-                            Austin, TX • Full-time • $110,000 - $150,000
+                            <span class="location">Seattle, WA</span> •
+                            <span class="jobType">Full-time</span> •
+                            <span class="salary">$140,000 - $190,000</span>
+
                         </p>
 
                         <div class="mt-5">
                             <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
                                 NOT APPLIED
                             </span>
                         </div>
 
-                        <p class="text-sm text-gray-700 mt-4">
+                        <p class="description text-sm text-gray-700 mt-4">
+                            Design and maintain scalable backend systems using Python and AWS. Work with modern
+                            DevOps practices and cloud infrastructure.
+                        </p>
+
+                        <div class="mt-5 flex gap-3">
+
+                            <button
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                INTERVIEW
+                            </button>
+
+                            <button
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                REJECTED
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                        aria-label="Delete">
+                        <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+
+                <div class="flex items-start justify-between">
+
+                    <div class="min-w-0">
+                        <h3 class="companyName text-[18px] font-semibold">Innovation Labs</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">UI/UX Engineer</p>
+
+                        <p class="text-sm text-slate-500 mt-4">
+                            <span class="location">Austin, TX</span> •
+                            <span class="jobType">Full-time</span> •
+                            <span class="salary">$110,000 - $150,000</span>
+
+                        </p>
+
+                        <div class="mt-5">
+                            <span
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                NOT APPLIED
+                            </span>
+                        </div>
+
+                        <p class="description text-sm text-gray-700 mt-4">
                             Create beautiful and functional user interfaces for our suite of products. Strong design
                             skills and frontend development expertise required.
                         </p>
@@ -301,99 +316,103 @@
                         <div class="mt-5 flex gap-3">
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
                                 INTERVIEW
                             </button>
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
                                 REJECTED
                             </button>
 
                         </div>
                     </div>
 
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
                         aria-label="Delete">
-
                         <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
+                    </a>
 
                 </div>
 
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
 
                 <div class="flex items-start justify-between">
 
                     <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">MegaCorp Solutions</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">JavaScript Developer</p>
+                        <h3 class="companyName text-[18px] font-semibold">MegaCorp Solutions</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">JavaScript Developer</p>
 
                         <p class="text-sm text-slate-500 mt-4">
-                            New York, NY • Full-time • $130,000 - $170,000 </p>
+                            <span class="location">New York, NY</span> •
+                            <span class="jobType">Full-time</span> •
+                            <span class="salary">$130,000 - $170,000</span>
+
+                        </p>
 
                         <div class="mt-5">
                             <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
                                 NOT APPLIED
                             </span>
                         </div>
 
-                        <p class="text-sm text-gray-700 mt-4">
-                            Build enterprise applications with JavaScript and modern frameworks. We offer competitive
-                            compensation, health insurance, and professional development opportunities.
+                        <p class="description text-sm text-gray-700 mt-4">
+                            Build enterprise applications with JavaScript and modern frameworks. We offer
+                            competitive compensation, health insurance, and professional development opportunities.
                         </p>
 
                         <div class="mt-5 flex gap-3">
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
                                 INTERVIEW
                             </button>
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
                                 REJECTED
                             </button>
 
                         </div>
                     </div>
 
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
                         aria-label="Delete">
-
                         <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
+                    </a>
 
                 </div>
 
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
 
                 <div class="flex items-start justify-between">
 
                     <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">StartupXYZ</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">Full Stack Engineer</p>
+                        <h3 class="companyName text-[18px] font-semibold">StartupXYZ</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">Full Stack Engineer</p>
 
                         <p class="text-sm text-slate-500 mt-4">
-                            Remote • Full-time • $120,000 - $160,000 </p>
+                            <span class="location">Remote</span> •
+                            <span class="jobType">Full-time</span> •
+                            <span class="salary">$120,000 - $160,000</span>
+
+                        </p>
 
                         <div class="mt-5">
                             <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
                                 NOT APPLIED
                             </span>
                         </div>
 
-                        <p class="text-sm text-gray-700 mt-4">
+                        <p class="description text-sm text-gray-700 mt-4">
                             Join our fast-growing startup and work on our core platform. Experience with Node.js and
                             React required. Great benefits and equity package included.
                         </p>
@@ -401,49 +420,51 @@
                         <div class="mt-5 flex gap-3">
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
                                 INTERVIEW
                             </button>
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
                                 REJECTED
                             </button>
 
                         </div>
                     </div>
 
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
                         aria-label="Delete">
-
                         <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
+                    </a>
 
                 </div>
 
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+            <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
 
                 <div class="flex items-start justify-between">
 
                     <div class="min-w-0">
-                        <h3 class="text-[18px] font-semibold">TechCorp Industries</h3>
-                        <p class="text-[16px] text-slate-600 mt-1">Senior Frontend Developer</p>
+                        <h3 class="companyName text-[18px] font-semibold">TechCorp Industries</h3>
+                        <p class="position text-[16px] text-slate-600 mt-1">Senior Frontend Developer</p>
 
                         <p class="text-sm text-slate-500 mt-4">
-                            San Francisco, CA • Full-time • $130,000 - $175,000 </p>
+                            <span class="location">San Francisco, CA</span> •
+                            <span class="jobType">Full-time</span> •
+                            <span class="salary">$130,000 - $175,000</span>
+
+                        </p>
 
                         <div class="mt-5">
                             <span
-                                class="px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
+                                class="statusText px-3 py-2 text-[14px] font-medium rounded-md bg-[#eef4ff] border border-slate-200">
                                 NOT APPLIED
                             </span>
                         </div>
 
-                        <p class="text-sm text-gray-700 mt-4">
+                        <p class="description text-sm text-gray-700 mt-4">
                             We are looking for an experienced Frontend Developer to build scalable web applications
                             using React and TypeScript. You will work with a talented team on cutting-edge projects.
                         </p>
@@ -451,30 +472,65 @@
                         <div class="mt-5 flex gap-3">
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+                                class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
                                 INTERVIEW
                             </button>
 
                             <button
-                                class="px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+                                class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
                                 REJECTED
                             </button>
 
                         </div>
                     </div>
 
-                    <button
-                        class="group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
+                    <a href="#delete-modal"
+                        class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition"
                         aria-label="Delete">
-
                         <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
-
-                    </button>
+                    </a>
 
                 </div>
 
             </div>
 
+
+        </section>
+
+        <section id="noJobs" class="hidden mt-6">
+            <div class="bg-white border border-slate-200 rounded-lg p-14 text-center">
+                <img src="image/jobs.png" alt="" class="mx-auto w-16 h-16">
+                <h3 class="mt-6 text-2xl font-semibold">No jobs available</h3>
+                <p class="mt-1 text-[16px] text-slate-500">Check back soon for new job opportunities</p>
+            </div>
+        </section>
+
+        <section id="delete-modal" class="fixed inset-0 z-50 hidden">
+
+            <a href="#!" class="absolute inset-0 bg-black/50"></a>
+
+
+            <div
+                class="relative mx-auto mt-28 w-[92%] max-w-xl rounded-xl bg-white shadow-xl border border-slate-200 p-8">
+                <h3 class="text-xl font-semibold text-slate-900">Delete Application</h3>
+
+                <p class="mt-3 text-sm text-slate-500 leading-relaxed">
+                    Are you sure you want to delete this application? This action cannot be undone.
+                </p>
+
+                <div class="mt-8 flex items-center justify-end gap-3">
+                    <a href="#!"
+                        class="px-6 py-2 text-sm font-semibold rounded-md border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition">
+                        Cancel
+                    </a>
+
+
+                    <button id="confirm-delete-btn"
+                        class="px-6 py-2 text-sm font-semibold rounded-md bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm">
+                        Delete
+                    </button>
+                </div>
+            </div>
         </section>
 
     </main>
