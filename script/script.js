@@ -202,5 +202,39 @@ function renderRejected() {
     showOrHideNoJobs();
 }
 
+mainContainer.addEventListener("click", function (event) {
+    const card = event.target.closest(".card");
+    if (!card) return;
+
+    const info = getJobInfo(card);
+
+    if (event.target.closest(".btn-delete")) {
+        const allCards = Array.from(allCardSection.querySelectorAll(".card"));
+        const matchInAll = allCards.find((c) => sameJob(getJobInfo(c), info));
+
+        if (matchInAll) {
+            matchInAll.remove();
+        }
+
+        card.remove();
+
+        interviewList = removeFrom(interviewList, info);
+        rejectedList = removeFrom(rejectedList, info);
+
+        if (currentStatus ===  "interview-filter-btn"){
+            renderInterview();
+        }
+        if(currentStatus === "rejected-filter-btn"){
+            renderRejected();
+        }
+        calculateCount();
+        showOrHideNoJobs();
+        return
+    }
+
+    if
+
+})
+
 
 
