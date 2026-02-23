@@ -73,7 +73,6 @@ function updateBadge(cardUpdate, statusUpdate) {
 }
 
 function calculateCount() {
-    console.log("calculateCount started");
     const totalCards = allCardSection.querySelectorAll(".card").length;
 
     totalCount.innerText = totalCards;
@@ -84,11 +83,123 @@ function calculateCount() {
     if (currentStatus === "interview-filter-btn") activeJobs.innerText = interviewList.length;
     if (currentStatus === "rejected-filter-btn") activeJobs.innerText = rejectedList.length;
 
-    console.log("calculateCount()");
-    console.log("Total Cards:", totalCards);
-    console.log("Interview list:", interviewList.length);
-    console.log("Rejected list:", rejectedList.length);
-    console.log("Right side active Jobs:", activeJobs.innerText);
+}
+
+function showOrHideNoJobs() {
+
+    if (currentStatus === "all-filter-btn") {
+        const totalCards = allCardSection.querySelectorAll(".card").length;
+        if (totalCards === 0) {
+            noJobsSection.classList.remove("hidden");
+        } else {
+            noJobsSection.classList.add("hidden");
+        }
+        return;
+    }
+
+    const count = currentStatus === "interview-filter-btn" ? interviewList.length : rejectedList.length;
+
+    if (count === 0) {
+        noJobsSection.classList.remove("hidden");
+    } else {
+        noJobsSection.classList.add("hidden");
+    }
+
+}
+
+function toggleStyle(id) {
+    currentStatus = id;
+
+    setActiveTab(id);
+
+    if (id === "all-filter-btn") {
+        allCardSection.classList.remove("hidden");
+        filteredSection.classList.add("hidden");
+
+        calculateCount();
+        showOrHideNoJobs();
+        return;
+    }
+    allCardSection.classList.add("hidden");
+    filteredSection.classList.remove("hidden");
+
+    if (id === "interview-filter-btn") {
+        renderInterview();
+    }
+
+    if (id === "rejected-filter-btn") {
+        renderRejected();
+    }
+
+    calculateCount();
+    showOrHideNoJobs();
+}
+
+allFilter.addEventListener("click", () => toggleStyle("all-filter-btn"));
+interviewFilter.addEventListener("click", () => toggleStyle("interview-filter-btn"));
+rejectedFilter.addEventListener("click", () => toggleStyle("interview-filter-btn"));
+
+function renderCardTemplate(item) {
+
+    return `
+    <div class="card bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition">
+      <div class="flex items-start justify-between">
+        <div class="min-w-0">
+          <h3 class="companyName text-[18px] font-semibold">${item.companyName}</h3>
+          <p class="position text-[16px] text-slate-600 mt-1">${item.position}</p>
+
+          <p class="text-sm text-slate-500 mt-4">
+            <span class="location">${item.location}</span> •
+            <span class="jobType">${item.jobType}</span> •
+            <span class="salary">${item.salary}</span>
+          </p>
+
+          <div class="mt-5">
+            <span class="statusText px-3 py-2 text-[14px] font-medium rounded-md ${item.status === "INTERVIEW"
+            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+            : "bg-rose-50 text-rose-700 border border-rose-200"
+        }">
+              ${item.status}
+            </span>
+          </div>
+
+          <p class="description text-sm text-gray-700 mt-4">${item.description}</p>
+
+          <div class="mt-5 flex gap-3">
+            <button class="interview-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition">
+              INTERVIEW
+            </button>
+            <button class="rejected-btn px-4 py-2 text-[14px] font-semibold rounded-md border border-rose-300 text-rose-700 hover:bg-rose-100 transition">
+              REJECTED
+            </button>
+          </div>
+        </div>
+
+        <button class="btn-delete group w-8 h-8 rounded-full border border-slate-200 hover:bg-rose-100 flex items-center justify-center transition" aria-label="Delete">
+          <i class="fa-regular fa-trash-can text-slate-500 group-hover:text-rose-500 transition"></i>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderInterview() {
+    filteredSection.innerHTML = "";
+    interviewList.forEach((item) => {
+        filteredSection.insertAdjacentHTML("beforeend", renderCardTemplate(item));
+    });
+    calculateCount();
+    showOrHideNoJobs();
+}
+
+function renderRejected() {
+    filteredSection.innerHTML = "";
+    rejectedList.forEach((item) => {
+        filteredSection.insertAdjacentHTML("beforeend", renderCardTemplate(item));
+    });
+
+    calculateCount();
+    showOrHideNoJobs();
 }
 
 
