@@ -137,7 +137,7 @@ function toggleStyle(id) {
 
 allFilter.addEventListener("click", () => toggleStyle("all-filter-btn"));
 interviewFilter.addEventListener("click", () => toggleStyle("interview-filter-btn"));
-rejectedFilter.addEventListener("click", () => toggleStyle("interview-filter-btn"));
+rejectedFilter.addEventListener("click", () => toggleStyle("rejected-filter-btn"));
 
 function renderCardTemplate(item) {
 
@@ -221,10 +221,10 @@ mainContainer.addEventListener("click", function (event) {
         interviewList = removeFrom(interviewList, info);
         rejectedList = removeFrom(rejectedList, info);
 
-        if (currentStatus ===  "interview-filter-btn"){
+        if (currentStatus === "interview-filter-btn") {
             renderInterview();
         }
-        if(currentStatus === "rejected-filter-btn"){
+        if (currentStatus === "rejected-filter-btn") {
             renderRejected();
         }
         calculateCount();
@@ -232,9 +232,52 @@ mainContainer.addEventListener("click", function (event) {
         return
     }
 
-    if
+    if (event.target.classList.contains("interview-btn")) {
+        updateBadge(card, "INTERVIEW")
+        upsert(interviewList, { ...info, status: "INTERVIEW" });
+        rejectedList = removeFrom(rejectedList, info);
 
-})
+        const allCards = Array.from(allCardSection.querySelectorAll(".card"));
+        const matchInAll = allCards.find((c) => sameJob(getJobInfo(c), info));
+        if (matchInAll) {
+            updateBadge(matchInAll, "INTERVIEW");
+        }
+        if (currentStatus === "interview-filter-btn") {
+            renderInterview();
+        }
+        if (currentStatus === "rejected-filter-btn") {
+            renderRejected();
+        }
+        calculateCount();
+        showOrHideNoJobs();
+        return;
+    }
+
+    if (event.target.classList.contains("rejected-btn")) {
+        updateBadge(card, "REJECTED");
+        upsert(rejectedList, { ...info, status: "REJECTED" });
+        interviewList = removeFrom(interviewList, info);
+
+        const allCards = Array.from(allCardSection.querySelectorAll(".card"));
+        const matchInAll = allCards.find((c) => sameJob(getJobInfo(c), info));
+        if (matchInAll) {
+            updateBadge(matchInAll, "REJECTED");
+        }
+
+        if (currentStatus === "interview-filter-btn") {
+            renderInterview();
+        }
+        if (currentStatus === "rejected-filter-btn") {
+            renderRejected();
+        }
+        calculateCount();
+        showOrHideNoJobs();
+        return;
+    }
+});
+
+calculateCount();
+showOrHideNoJobs();
 
 
 
