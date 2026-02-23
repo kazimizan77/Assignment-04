@@ -31,7 +31,7 @@ function getJobInfo(card) {
 }
 
 function sameJob(a, b) {
-    return a.companyName === b.companyName && a.position === b.position;
+    return a.companyName === b.companyName && a.position === b.position && a.location === b.location
 }
 
 function upsert(list, item) {
@@ -79,9 +79,15 @@ function calculateCount() {
     interviewCount.innerText = interviewList.length;
     rejectedCount.innerText = rejectedList.length;
 
-    if (currentStatus === "all-filter-btn") activeJobs.innerText = totalCards;
-    if (currentStatus === "interview-filter-btn") activeJobs.innerText = interviewList.length;
-    if (currentStatus === "rejected-filter-btn") activeJobs.innerText = rejectedList.length;
+    if (currentStatus === "all-filter-btn") {
+        activeJobs.innerText = totalCards;
+    } else if (currentStatus === "interview-filter-btn") {
+        activeJobs.innerText = interviewList.length === 0
+            ? 0 : `${interviewList.length} of ${totalCards}`;
+    } else if (currentStatus === "rejected-filter-btn") {
+        activeJobs.innerText = rejectedList.length === 0
+            ? 0 : `${rejectedList.length} of ${totalCards}`;
+    }
 
 }
 
@@ -232,8 +238,9 @@ mainContainer.addEventListener("click", function (event) {
         return
     }
 
-    if (event.target.classList.contains("interview-btn")) {
+    if (event.target.closest(".interview-btn")) {
         updateBadge(card, "INTERVIEW")
+
         upsert(interviewList, { ...info, status: "INTERVIEW" });
         rejectedList = removeFrom(rejectedList, info);
 
@@ -253,8 +260,9 @@ mainContainer.addEventListener("click", function (event) {
         return;
     }
 
-    if (event.target.classList.contains("rejected-btn")) {
+    if (event.target.closest(".rejected-btn")) {
         updateBadge(card, "REJECTED");
+
         upsert(rejectedList, { ...info, status: "REJECTED" });
         interviewList = removeFrom(interviewList, info);
 
@@ -275,6 +283,7 @@ mainContainer.addEventListener("click", function (event) {
         return;
     }
 });
+
 
 calculateCount();
 showOrHideNoJobs();
